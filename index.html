@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="theme-color" content="#3F51B5">
+
+    <title>Gitattributes Generator</title>
+    <meta name="description" content="A simple gitattributes generator that leverages alexkaratarakis/gitattributes.">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@1.1.1/dist/material-components-web.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.min.css">
+
+    <style>
+        body {
+            --mdc-theme-primary: #3f51b5;
+            --mdc-theme-secondary: #f44336;
+            --mdc-theme-on-primary: #ffffff;
+            --mdc-theme-on-secondary: #ffffff;
+            background-color: #fafafa;
+        }
+
+        body .ribbon {
+            top: 0;
+            z-index: -1;
+            background-color: #3f51b5;
+            width: 100%;
+            height: 10rem;
+            position: absolute;
+        }
+
+        body .main-content {
+            background-color: #ffffff;
+            border-radius: 4px;
+            margin: 1.5rem;
+            padding: 2rem;
+            min-height: calc(100vh - 7rem);
+        }
+
+        body .main-content .mdc-button.mdc-button--raised {
+            background-color: var(--mdc-theme-secondary, #6200ee);
+        }
+
+        body .main-content .theme-toggle {
+            position: absolute;
+            top: 0.5rem;
+            right: 3rem;
+        }
+
+        body .main-content a {
+            color: #3f51b5;
+        }
+
+        body .main-content .gen__action {
+            position: absolute;
+            right: -24px;
+        }
+
+        body .main-content .gen__copy {
+            top: 16px;
+        }
+
+        body .main-content .gen__command {
+            top: 86px;
+        }
+
+        body .main-content .gen__copycmd {
+            position: absolute;
+            right: -32px;
+            top: 8px;
+        }
+
+        body .main-content::-moz-selection {
+            background-color: #3f51b5;
+            color: white;
+        }
+
+        body .main-content::selection {
+            background-color: #3f51b5;
+            color: white;
+        }
+
+        body .main-content .selectize-control {
+            color: #212121;
+        }
+
+        body .main-content .selectize-control .selectize-dropdown,
+        body .main-content .selectize-control .selectize-input,
+        body .main-content .selectize-control .selectize-input input,
+        body .main-content .selectize-control .selectize-input .item {
+            font-size: 1rem;
+            letter-spacing: 0.009375em;
+            color: #666666;
+        }
+
+        body .main-content .selectize-control .selectize-input .item {
+            background-color: #e0e0e0;
+            padding: 7px 12px;
+            border-radius: 16px;
+        }
+
+        body .main-content .selectize-control .selectize-input .item .remove {
+            margin-top: 5px;
+            margin-right: 4px;
+            border: 0;
+        }
+
+        body .main-content .selectize-control .selectize-input .item .remove:hover {
+            background-color: transparent;
+        }
+
+        body .main-content .selectize-control .selectize-dropdown-content .option {
+            padding: 16px;
+            cursor: pointer;
+        }
+
+        body .main-content .selectize-control .selectize-dropdown-content .option.active {
+            background-color: #f5f5f5;
+            color: inherit;
+        }
+
+        body .main-content .selectize-control>.selectize-input {
+            margin-bottom: 1px;
+            color: transparent !important;
+            font-family: "Roboto", sans-serif;
+            padding-left: 15px;
+            padding-top: 15px;
+            border-color: #c2c2c2;
+            border-radius: 4px;
+            min-height: 56px;
+            color: #666666;
+            padding: 16px;
+            cursor: pointer;
+            outline: 0;
+            padding: 16px !important;
+        }
+
+        body .main-content .selectize-control>.selectize-input:not(.has-items).focus {
+            padding-top: 15px !important;
+            padding-left: 15px !important;
+        }
+
+        body .main-content .selectize-control>.selectize-input.has-items {
+            padding: 10px !important;
+        }
+
+        body .main-content .selectize-control>.selectize-input.has-items.focus,
+        body .main-content .selectize-control>.selectize-input.has-items.dropdown-active {
+            padding: 9px !important;
+        }
+
+        body .main-content .selectize-control>.selectize-input.focus,
+        body .main-content .selectize-control>.selectize-input.dropdown-active {
+            padding: 16px !important;
+            border-color: #3f51b5;
+            border-color: var(--mdc-theme-primary, #3f51b5);
+            border-width: 2px;
+            padding: 15px;
+        }
+
+        body .main-content .selectize-control>.selectize-input.focus:after,
+        body .main-content .selectize-control>.selectize-input.dropdown-active:after {
+            border-bottom-color: #3f51b5 !important;
+        }
+
+        body .main-content #carbonads {
+            margin-bottom: 1rem;
+            float: right;
+            border-radius: 6px;
+            box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+            font-family: Roboto, Helvetica, sans-serif;
+            line-height: 28px;
+            padding: 8px;
+            box-sizing: border-box;
+            transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media only screen and (max-width: 425px) {
+            body .main-content #carbonads {
+                width: 100%;
+            }
+        }
+
+        body .main-content #carbonads:hover {
+            box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+        }
+
+        body .main-content #carbonads .carbon-wrap .carbon-img>img {
+            margin-right: 9px;
+            float: left;
+        }
+
+        @media only screen and (max-width: 400px) {
+            body .main-content #carbonads .carbon-wrap .carbon-img>img {
+                width: auto;
+                max-width: 130px;
+                height: 50px;
+            }
+        }
+
+        body .main-content #carbonads .carbon-wrap .carbon-text {
+            color: #637381;
+            font-weight: 300;
+            display: block;
+            font-size: 12px;
+            line-height: 15.96px;
+            margin-bottom: 0;
+            margin-top: 8px;
+            text-decoration: none;
+        }
+
+        body .main-content #carbonads .carbon-poweredby {
+            color: #c5cdd0;
+            font-size: 8px;
+            font-weight: 500;
+            line-height: 10px;
+            text-transform: uppercase;
+            text-decoration: none;
+        }
+
+        body.setting--dark {
+            background-color: #212121 !important;
+            --mdc-theme-text-primary-on-background: white;
+            --mdc-theme-text-secondary-on-background: white;
+            --mdc-theme-text-icon-on-background: white;
+        }
+
+        body.setting--dark .main-content {
+            color: white;
+            background-color: #303030;
+        }
+
+        body.setting--dark .main-content textarea {
+            color: white;
+        }
+
+        body.setting--dark .main-content .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input,
+        body.setting--dark .main-content .mdc-text-field:not(.mdc-text-field--disabled) .mdc-floating-label {
+            color: white;
+        }
+
+        body.setting--dark .main-content .mdc-text-field--outlined:not(.mdc-text-field--disabled) {
+            border-color: white;
+        }
+
+        body.setting--dark .main-content #carbonads .carbon-text {
+            color: white !important;
+        }
+
+        body.setting--dark .main-content a {
+            color: #5c6bc0;
+        }
+
+        body.setting--dark .main-content::-moz-selection {
+            background-color: #c5cae9;
+            color: black;
+        }
+
+        body.setting--dark .main-content::selection {
+            background-color: #c5cae9;
+            color: black;
+        }
+
+        body.setting--dark .main-content .selectize-control .selectize-input {
+            background-color: transparent;
+        }
+
+        body.setting--dark .main-content .selectize-control .selectize-input input,
+        body.setting--dark .main-content .selectize-control .selectize-input input::-webkit-input-placeholder {
+            color: white;
+        }
+
+        body.setting--dark .main-content .selectize-control .selectize-input input,
+        body.setting--dark .main-content .selectize-control .selectize-input input:-ms-input-placeholder {
+            color: white;
+        }
+
+        body.setting--dark .main-content .selectize-control .selectize-input input,
+        body.setting--dark .main-content .selectize-control .selectize-input input::-ms-input-placeholder {
+            color: white;
+        }
+
+        body.setting--dark .main-content .selectize-control .selectize-input input,
+        body.setting--dark .main-content .selectize-control .selectize-input input::placeholder {
+            color: white;
+        }
+
+        body.setting--dark .main-content .selectize-control .selectize-dropdown {
+            background-color: #e0e0e0;
+        }
+
+        body.setting--animate-colours {
+            transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.setting--animate-colours .main-content,
+        body.setting--animate-colours a,
+        body.setting--animate-colours::-moz-selection {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition-property: background-color, color;
+        }
+
+        body.setting--animate-colours .main-content,
+        body.setting--animate-colours a,
+        body.setting--animate-colours::selection {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition-property: background-color, color;
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
+
+</head>
+
+<body>
+    <div class="ribbon mdc-elevation--z4"></div>
+    <main class="main-content mdc-typography mdc-elevation--z8">
+        <script async src="https://cdn.carbonads.com/carbon.js?serve=CK7I6K3E&amp;placement=wwwrichie-bendallml" id="_carbonads_js"></script>
+        <button class="theme-toggle mdc-fab mdc-fab--mini" aria-label="Toggle theme" data-mdc-auto-init="MDCRipple">
+            <svg class="theme-toggle--svg mdc-fab__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path fill="none" d="M0 0h24v24H0V0z" />
+                <path d="M11 7l-3.2 9h1.9l.7-2h3.2l.7 2h1.9L13 7h-2zm-.15 5.65L12 9l1.15 3.65h-2.3zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zm-2 5.79V18h-3.52L12 20.48 9.52 18H6v-3.52L3.52 12 6 9.52V6h3.52L12 3.52 14.48 6H18v3.52L20.48 12 18 14.48z" />
+            </svg>
+        </button>
+        <h1 class="mdc-typography--headline2">Gitattributes Generator</h1>
+        <p class="mdc-typography--body1">A simple gitattributes generator that leverages <a target="_blank" rel="noopener" href="https://github.com/alexkaratarakis/gitattributes">alexkaratarakis/gitattributes</a>.</p>
+        <select class="gen__container" placeholder="Select file types for gitattributes">
+            <option value=""></option>
+        </select>
+
+        <div class="gen__output mdc-text-field mdc-text-field--textarea mdc-text-field--no-label mdc-text-field--fullwidth" data-mdc-auto-init="MDCTextField">
+            <textarea id="textarea" class="mdc-text-field__input" rows="30" readonly></textarea>
+            <div class="mdc-notched-outline">
+                <div class="mdc-notched-outline__leading"></div>
+                <div class="mdc-notched-outline__notch">
+                </div>
+                <div class="mdc-notched-outline__trailing"></div>
+            </div>
+            <button class="gen__action gen__copy mdc-fab" title="Copy to clipboard" data-clipboard-target=".gen__output textarea" data-mdc-auto-init="MDCRipple">
+                <svg class="mdc-fab__icon" viewBox="0 0 24 24">
+                    <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" />
+                </svg>
+            </button>
+            <button class="gen__action gen__command mdc-fab" title="View download command" data-clipboard-target=".gen__output textarea" data-mdc-auto-init="MDCRipple">
+                <svg class="mdc-fab__icon" viewBox="0 0 24 24">
+                    <path d="M13,19V16H21V19H13M8.5,13L2.47,7H6.71L11.67,11.95C12.25,12.54 12.25,13.5 11.67,14.07L6.74,19H2.5L8.5,13Z" />
+                </svg>
+            </button>
+        </div>
+        <div class="gen__commandlist mdc-dialog" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title" aria-describedby="my-dialog-content" data-mdc-auto-init="MDCDialog">
+            <div class="mdc-dialog__container">
+                <div class="mdc-dialog__surface">
+                    <h2 class="mdc-dialog__title" id="my-dialog-title">Download commands</h2>
+                    <div class="mdc-dialog__content" id="my-dialog-content">
+                        Curl (Linux):
+                        <br>
+                        <div class="gen__curl mdc-text-field mdc-text-field--outlined mdc-text-field--no-label" data-mdc-auto-init="MDCTextField">
+                            <input type="text" class="mdc-text-field__input" readonly>
+                            <div class="mdc-notched-outline">
+                                <div class="mdc-notched-outline__leading"></div>
+                                <div class="mdc-notched-outline__notch">
+                                </div>
+                                <div class="mdc-notched-outline__trailing"></div>
+                            </div>
+                            <button class="gen__copycmd gen__copycurl mdc-fab mdc-fab--mini" title="Copy to clipboard" data-clipboard-target=".gen__curl input" data-mdc-auto-init="MDCRipple">
+                                <svg class="mdc-fab__icon" viewBox="0 0 24 24">
+                                    <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" />
+                                </svg>
+                            </button>
+                        </div>
+                        <br>
+                        <br> Wget - <strong>Recommended</strong> (Linux):
+                        <br>
+                        <div class="gen__wget mdc-text-field mdc-text-field--outlined mdc-text-field--no-label" data-mdc-auto-init="MDCTextField">
+                            <input type="text" class="mdc-text-field__input" readonly>
+                            <div class="mdc-notched-outline">
+                                <div class="mdc-notched-outline__leading"></div>
+                                <div class="mdc-notched-outline__notch">
+                                </div>
+                                <div class="mdc-notched-outline__trailing"></div>
+                            </div>
+                            <button class="gen__copycmd gen__copywget mdc-fab mdc-fab--mini" title="Copy to clipboard" data-clipboard-target=".gen__wget input" data-mdc-auto-init="MDCRipple">
+                                <svg class="mdc-fab__icon" viewBox="0 0 24 24">
+                                    <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" />
+                                </svg>
+                            </button>
+                        </div>
+                        <br>
+                        <br> Powershell (Windows):
+                        <br>
+                        <div class="gen__powershell mdc-text-field mdc-text-field--outlined mdc-text-field--no-label" data-mdc-auto-init="MDCTextField">
+                            <input type="text" class="mdc-text-field__input" readonly>
+                            <div class="mdc-notched-outline">
+                                <div class="mdc-notched-outline__leading"></div>
+                                <div class="mdc-notched-outline__notch">
+                                </div>
+                                <div class="mdc-notched-outline__trailing"></div>
+                            </div>
+                            <button class="gen__copycmd gen__copypowershell mdc-fab mdc-fab--mini" title="Copy to clipboard" data-clipboard-target=".gen__powershell input" data-mdc-auto-init="MDCRipple">
+                                <svg class="mdc-fab__icon" viewBox="0 0 24 24">
+                                    <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" />
+                                </svg>
+                            </button>
+                        </div>
+                        <br>
+                        <br> Commandline (Windows):
+                        <br>
+                        <div class="gen__commandline mdc-text-field mdc-text-field--outlined mdc-text-field--no-label" data-mdc-auto-init="MDCTextField">
+                            <input type="text" class="mdc-text-field__input" readonly>
+                            <div class="mdc-notched-outline">
+                                <div class="mdc-notched-outline__leading"></div>
+                                <div class="mdc-notched-outline__notch">
+                                </div>
+                                <div class="mdc-notched-outline__trailing"></div>
+                            </div>
+                            <button class="gen__copycmd gen__copycommandline mdc-fab mdc-fab--mini" title="Copy to clipboard" data-clipboard-target=".gen__commandline input" data-mdc-auto-init="MDCRipple">
+                                <svg class="mdc-fab__icon" viewBox="0 0 24 24">
+                                    <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <footer class="mdc-dialog__actions">
+                        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="ok">
+                            <span class="mdc-button__label">Close</span>
+                        </button>
+                    </footer>
+                </div>
+            </div>
+            <div class="mdc-dialog__scrim"></div>
+        </div>
+        <div class="gen__copied mdc-snackbar mdc-snackbar--leading" data-mdc-auto-init="MDCSnackbar">
+            <div class="mdc-snackbar__surface">
+                <div class="mdc-snackbar__label" role="status" aria-live="polite">
+                    Successfully copied to clipboard
+                </div>
+            </div>
+        </div>
+        <div class="gen__failcopied mdc-snackbar mdc-snackbar--leading" data-mdc-auto-init="MDCSnackbar">
+            <div class="mdc-snackbar__surface">
+                <div class="mdc-snackbar__label" role="status" aria-live="polite">
+                    Failed to copy to clipboard
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+    <script src="https://unpkg.com/material-components-web@1.1.1/dist/material-components-web.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
+
+    <script>
+        mdc.autoInit();
+
+        Array.prototype.cycle = function(str) {
+            var i = this.indexOf(str);
+            if (i === -1) return undefined;
+            return this[(i + 1) % this.length];
+        };
+
+        var handleTheme = function handleTheme() {
+            switch (localStorage.getItem("theme")) {
+                case "light":
+                    $(".theme-toggle--svg").html("<path fill=\"none\" d=\"M0 0h24v24H0V0z\"/><path d=\"M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zm-2 5.79V18h-3.52L12 20.48 9.52 18H6v-3.52L3.52 12 6 9.52V6h3.52L12 3.52 14.48 6H18v3.52L20.48 12 18 14.48zM12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z\"/><circle cx=\"12\" cy=\"12\" r=\"2.5\"/>");
+                    $("body").removeClass("setting--dark");
+                    break;
+
+                case "dark":
+                    $(".theme-toggle--svg").html("<path fill=\"none\" d=\"M0 0h24v24H0V0z\"/><path d=\"M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zm-2 5.79V18h-3.52L12 20.48 9.52 18H6v-3.52L3.52 12 6 9.52V6h3.52L12 3.52 14.48 6H18v3.52L20.48 12 18 14.48zM12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z\"/>");
+                    $("body").addClass("setting--dark");
+                    break;
+
+                default:
+                    $(".theme-toggle--svg").html("<path fill=\"none\" d=\"M0 0h24v24H0V0z\"/><path d=\"M11 7l-3.2 9h1.9l.7-2h3.2l.7 2h1.9L13 7h-2zm-.15 5.65L12 9l1.15 3.65h-2.3zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zm-2 5.79V18h-3.52L12 20.48 9.52 18H6v-3.52L3.52 12 6 9.52V6h3.52L12 3.52 14.48 6H18v3.52L20.48 12 18 14.48z\"/>");
+                    var hours = new Date().getHours();
+                    $("body").toggleClass("setting--dark", hours <= 6 || hours >= 20 || window.matchMedia("(prefers-color-scheme: dark)").matches || window.matchMedia("(-ms-high-contrast: white-on-black)").matches);
+            }
+        };
+
+        if (!["auto", "light", "dark"].includes(localStorage.getItem("theme"))) localStorage.setItem("theme", "auto");
+        handleTheme();
+        $("body").addClass("setting--animate-colours");
+        $(".theme-toggle").click(function() {
+            localStorage.setItem("theme", ["auto", "light", "dark"].cycle(localStorage.getItem("theme")));
+            handleTheme();
+        });
+
+        var doneLoading = function doneLoading() {
+            var sel = $(".gen__container").selectize({
+                persist: false,
+                plugins: ["remove_button"],
+                maxItems: null,
+                sortField: "text",
+                selectOnTab: true,
+                items: ["Common"]
+            });
+
+            var selChanged = function selChanged() {
+                var sval = sel.val();
+                $(".gen__curl").get(0).MDCTextField.value = "{ " + sval.map(function(i) {
+                    return "curl https://raw.githubusercontent.com/alexkaratarakis/gitattributes/master/" + i + ".gitattributes | head -20";
+                }).join(" && ") + "; } > .gitattributes";
+                $(".gen__wget").get(0).MDCTextField.value = "wget -O - https://raw.githubusercontent.com/alexkaratarakis/gitattributes/master/{" + sval.join(",") + "}.gitattributes > .gitattributes";
+                $(".gen__powershell").get(0).MDCTextField.value = "Set-Content .gitattributes \"\" ;; " + $.map(sval, function(i) {
+                    return "Add-Content .gitattributes (Invoke-WebRequest \"https://raw.githubuse\nrcontent.com/alexkaratarakis/gitattributes/master/" + i + ".gitattributes\").Content";
+                }).join(" ;; ");
+                $(".gen__commandline").get(0).MDCTextField.value = "mkdir \".gitattrgen\" && " + $.map(sval, function(i) {
+                    return "bitsadmin /transfer GitattrGen \"https://raw.githubusercontent.com/alexkaratarakis/gitattributes/master/" + i + ".gitattributes\" \"%cd%\\GitattrGen\\" + i + ".gitattributes\"";
+                }).join(" && ") + " && copy \"GitattrGen\\*.gitattributes\" \".gitattributes\" && rmdir /S /Q \".gitattrgen\"";
+                $(".gen__output").get(0).MDCTextField.value = "";
+                $.map(sval, function(i) {
+                    return $.get("https://raw.githubusercontent.com/alexkaratarakis/gitattributes/master/" + i + ".gitattributes", function(res) {
+                        return $(".gen__output").get(0).MDCTextField.value += "" + (!$(".gen__output") ? "\n" : "") + res;
+                    });
+                });
+            };
+
+            sel.on("change", selChanged);
+            selChanged();
+        };
+
+        $.getJSON("https://api.github.com/rate_limit", function(_ref) {
+            var resources = _ref.resources;
+
+            if (resources.core.remaining === 0) {
+                $.map(JSON.parse(localStorage.getItem("gitattr-gen-opts")) || ["ActionScript", "Ada", "Ballerina", "C++", "CSharp", "Common", "Delphi", "Drupal", "Fortran", "Fountain", "Go", "Java", "Lua", "Matlab", "ObjectiveC", "Pascal", "Perl", "Python", "R", "Rails", "Servoy", "VisualStudio", "Web"], function(i) {
+                    return $(".gen__container").append("<option value=\"" + i + "\">" + i + "</option>");
+                });
+                doneLoading();
+            } else {
+                $.getJSON("https://api.github.com/repos/alexkaratarakis/gitattributes/contents", function(files) {
+                    var opts = [];
+                    var r = /.+\.gitattributes/;
+                    $.map(files, function(_ref2) {
+                        var name = _ref2.name;
+
+                        if (r.test(name)) {
+                            var i = name.replace(".gitattributes", "");
+                            opts.push(i);
+                            $(".gen__container").append("<option value=\"" + i + "\">" + i + "</option>");
+                        }
+                    });
+                    localStorage.setItem("gitattr-gen-opts", JSON.stringify(opts));
+                    doneLoading();
+                });
+            }
+        });
+        $(".gen__command").click(function() {
+            return $(".gen__commandlist").get(0).MDCDialog.open();
+        });
+
+        var setupCopy = function setupCopy(el) {
+            var clipboard = new ClipboardJS(el);
+            clipboard.on("success", function(e) {
+                $(".gen__copied").get(0).MDCSnackbar.open();
+                e.clearSelection();
+            });
+            clipboard.on("error", function(e) {
+                $(".gen__failcopied").get(0).MDCSnackbar.open();
+                e.clearSelection();
+            });
+        };
+
+        setupCopy(".gen__copy");
+        setupCopy(".gen__copycurl");
+        setupCopy(".gen__copywget");
+        setupCopy(".gen__copypowershell");
+        setupCopy(".gen__copycommandline");
+    </script>
+
+</body>
+
+</html>
