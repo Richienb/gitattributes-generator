@@ -13,8 +13,8 @@
 
     <link rel="shortcut icon" href="favicon.ico">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/2.2.0/material-components-web.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/2.3.0/material-components-web.min.css" integrity="sha256-UMGcubpjEU+onPQm1p5+pJ3EeXD+qIvDcAFZNMls68g=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.min.css" integrity="sha256-EhmqrzYSImS7269rfDxk4H+AHDyu/KwV1d8FDgIXScI=" crossorigin="anonymous" />
 
     <style>
         body {
@@ -230,7 +230,7 @@
         }
         
         body.setting--dark {
-            background-color: #212121 !important;
+            background-color: #121212 !important;
             --mdc-theme-text-primary-on-background: white;
             --mdc-theme-text-secondary-on-background: white;
             --mdc-theme-text-icon-on-background: white;
@@ -246,12 +246,12 @@
         }
         
         body.setting--dark::-webkit-scrollbar {
-            background-color: #505050;
+            background-color: #424242;
         }
         
         body.setting--dark .main-content {
             color: white;
-            background-color: #303030;
+            background-color: #212121;
         }
         
         body.setting--dark .main-content .selectize-control .selectize-input {
@@ -337,42 +337,48 @@
         }
         
         body::-webkit-scrollbar-button,
-        body textarea::-webkit-scrollbar-button {
+        body textarea::-webkit-scrollbar-button,
+        body .selectize-dropdown-content::-webkit-scrollbar-button {
             height: 0;
             width: 0;
         }
         
         body::-webkit-scrollbar-corner,
-        body textarea::-webkit-scrollbar-corner {
+        body textarea::-webkit-scrollbar-corner,
+        body .selectize-dropdown-content::-webkit-scrollbar-corner {
             background-color: transparent;
         }
         
         body::-webkit-scrollbar-thumb,
-        body textarea::-webkit-scrollbar-thumb {
+        body textarea::-webkit-scrollbar-thumb,
+        body .selectize-dropdown-content::-webkit-scrollbar-thumb {
             border-radius: 100px;
             background-color: rgba(0, 0, 0, 0.2);
             min-height: 28px;
         }
         
         body::-webkit-scrollbar-thumb:hover,
-        body textarea::-webkit-scrollbar-thumb:hover {
+        body textarea::-webkit-scrollbar-thumb:hover,
+        body .selectize-dropdown-content::-webkit-scrollbar-thumb:hover {
             background-color: rgba(0, 0, 0, 0.4);
         }
         
         body::-webkit-scrollbar-thumb:active,
-        body textarea::-webkit-scrollbar-thumb:active {
+        body textarea::-webkit-scrollbar-thumb:active,
+        body .selectize-dropdown-content::-webkit-scrollbar-thumb:active {
             background-color: rgba(0, 0, 0, 0.5);
         }
         
         body::-webkit-scrollbar-track,
-        body textarea::-webkit-scrollbar-track {
+        body textarea::-webkit-scrollbar-track,
+        body .selectize-dropdown-content::-webkit-scrollbar-track {
             background-clip: padding-box;
             border-width: 0 0 0 4px;
         }
     </style>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
 
 </head>
 
@@ -509,11 +515,11 @@
         </div>
     </main>
 
-    <script async src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/2.2.0/material-components-web.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js" integrity="sha256-1eSvllkLdrfxD6G8RGF9h+mQuD93Af5+GdPBMNc7uMQ=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/2.3.0/material-components-web.min.js" integrity="sha256-BzmZ5n2DFLOgqmbLkakCq47YbU8n4s93pqTIrwrgXKM=" crossorigin="anonymous"></script>t>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
     <script>
         mdc.autoInit();
