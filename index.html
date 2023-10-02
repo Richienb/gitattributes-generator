@@ -9,7 +9,7 @@
     <meta name="theme-color" content="#3F51B5">
 
     <title>Gitattributes Generator</title>
-    <meta name="description" content="A simple gitattributes generator that leverages alexkaratarakis/gitattributes.">
+    <meta name="description" content="A simple gitattributes generator that leverages gitattributes/gitattributes.">
 
     <link rel="shortcut icon" href="favicon.ico">
 
@@ -399,7 +399,7 @@
             </svg>
         </button>
         <h1 class="mdc-typography--headline2">Gitattributes Generator</h1>
-        <p class="mdc-typography--body1">A simple gitattributes generator that leverages <a target="_blank" rel="noopener" href="https://github.com/alexkaratarakis/gitattributes">alexkaratarakis/gitattributes</a>.</p>
+        <p class="mdc-typography--body1">A simple gitattributes generator that leverages <a target="_blank" rel="noopener" href="https://github.com/gitattributes/gitattributes">gitattributes/gitattributes</a>.</p>
         <select class="gen__container" placeholder="Select file types for gitattributes">
             <option value=""></option>
         </select>
@@ -583,19 +583,19 @@
                 var sval = sel.val();
                 $(".gen__curl").get(0).MDCTextField.value = "{ " + sval.
                 map(function(i) {
-                    return "curl https://raw.githubusercontent.com/alexkaratarakis/gitattributes/master/" + i + ".gitattributes | head -20";
+                    return "curl https://raw.githubusercontent.com/gitattributes/gitattributes/master/" + i + ".gitattributes | head -20";
                 }).
                 join(" && ") + "; } > .gitattributes";
-                $(".gen__wget").get(0).MDCTextField.value = "wget -O - https://raw.githubusercontent.com/alexkaratarakis/gitattributes/master/{" + sval.join(",") + "}.gitattributes > .gitattributes";
+                $(".gen__wget").get(0).MDCTextField.value = "wget -O - https://raw.githubusercontent.com/gitattributes/gitattributes/master/{" + sval.join(",") + "}.gitattributes > .gitattributes";
                 $(".gen__powershell").get(0).MDCTextField.value = "Set-Content .gitattributes \"\" ;; " + $.map(sval, function(i) {
-                    return "Add-Content .gitattributes (Invoke-WebRequest \"https://raw.githubuse\nrcontent.com/alexkaratarakis/gitattributes/master/" + i + ".gitattributes\").Content";
+                    return "Add-Content .gitattributes (Invoke-WebRequest \"https://raw.githubuse\nrcontent.com/gitattributes/gitattributes/master/" + i + ".gitattributes\").Content";
                 }).join(" ;; ");
                 $(".gen__commandline").get(0).MDCTextField.value = "mkdir \".gitattrgen\" && " + $.map(sval, function(i) {
-                    return "bitsadmin /transfer GitattrGen \"https://raw.githubusercontent.com/alexkaratarakis/gitattributes/master/" + i + ".gitattributes\" \"%cd%\\GitattrGen\\" + i + ".gitattributes\"";
+                    return "bitsadmin /transfer GitattrGen \"https://raw.githubusercontent.com/gitattributes/gitattributes/master/" + i + ".gitattributes\" \"%cd%\\GitattrGen\\" + i + ".gitattributes\"";
                 }).join(" && ") + " && copy \"GitattrGen\\*.gitattributes\" \".gitattributes\" && rmdir /S /Q \".gitattrgen\"";
                 $(".gen__output").get(0).MDCTextField.value = "";
                 $.map(sval, function(i) {
-                    return $.get("https://raw.githubusercontent.com/alexkaratarakis/gitattributes/master/" + i + ".gitattributes", function(res) {
+                    return $.get("https://raw.githubusercontent.com/gitattributes/gitattributes/master/" + i + ".gitattributes", function(res) {
                         return $(".gen__output").get(0).MDCTextField.value += "" + ($(".gen__output").get(0).MDCTextField.value ? "\n" : "") + res;
                     });
                 });
@@ -637,7 +637,7 @@
                     });
                 doneLoading();
             } else {
-                $.getJSON("https://api.github.com/repos/alexkaratarakis/gitattributes/contents", function(files) {
+                $.getJSON("https://api.github.com/repos/gitattributes/gitattributes/contents", function(files) {
                     var opts = [];
                     var r = /.+\.gitattributes/;
                     $.map(files, function(_a) {
